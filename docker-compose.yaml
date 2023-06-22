@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  api:
+    image: api:latest
+    restart: unless-stopped
+    volumes:
+      - ./config/scan.js:/usr/share/nginx/html/env.js
+    ports:
+      - "3000:3000"
+    environment:
+     - CONFIG_FILE=/config.yaml

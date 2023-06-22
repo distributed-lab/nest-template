@@ -26,7 +26,7 @@ export const validationSchema = joi.object<Config>({
   },
   log: {
     errorFile: joi.string().optional().allow('').pattern(logFileRE),
-    combinedFile: joi.string().pattern(logFileRE).required(),
+    combinedFile: joi.string().optional().pattern(logFileRE),
     level: joi.string().equal('debug', 'info').default('info'),
     inJson: joi.boolean().equal(true, false).default(false),
   },

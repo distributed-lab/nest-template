@@ -21,8 +21,8 @@ redis:
   ttl: 900
 
 log:
-  errorFile: "error.log"
-  combinedFile: "combined.log"
+#  errorFile: "error.log"
+#  combinedFile: "combined.log"
   level: "debug"
   inJson: true
 

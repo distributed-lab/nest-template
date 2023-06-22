@@ -8,10 +8,10 @@ RUN yarn install
 
 # Build application
 COPY . .
-RUN yarn build:app
+RUN yarn build:api
 
 # Configure application startup command
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:api:prod"]
 
 FROM node:18 as pre-production
 # Install runtime dependencies
