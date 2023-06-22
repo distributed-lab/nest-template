@@ -35,8 +35,3 @@ $ yarn run test:cov
 ## License
 
 [MIT licensed](LICENSE).
-
-
-ШО НАДО
-
-- db
