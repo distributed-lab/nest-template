@@ -5,8 +5,8 @@ services:
     image: api:latest
     restart: unless-stopped
     volumes:
-      - ./config/scan.js:/usr/share/nginx/html/env.js
+      - ./config.yaml:/config.yaml
     ports:
       - "3000:3000"
     environment:
-     - CONFIG_FILE=/config.yaml
+      - CONFIG_FILE=/config.yaml

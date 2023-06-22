@@ -32,6 +32,11 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
+# Build
+```bash
+docker build -f Dockerfile.api . -t api
+```
+
 ## License
 
 [MIT licensed](LICENSE).

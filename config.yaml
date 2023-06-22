@@ -2,7 +2,8 @@ nodeEnv: 'development'
 
 app:
   name: "nest-template"
-  host: localhost
+# Comment for docker-compose
+#host: localhost
   port: 3000
   globalPrefix: "v1"
 
@@ -21,8 +22,6 @@ redis:
   ttl: 900
 
 log:
-#  errorFile: "error.log"
-#  combinedFile: "combined.log"
   level: "debug"
   inJson: true
 
