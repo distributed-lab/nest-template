@@ -1,0 +1,36 @@
+nodeEnv: 'development'
+
+app:
+  name: "nest-template"
+  host: localhost
+  port: 3000
+  globalPrefix: "v1"
+
+db:
+  host: "localhost"
+  port: 5432
+  username: "postgres"
+  password: "postgres"
+  database: "postgres"
+  synchronize: false
+  logging: true
+
+redis:
+  host: "redis"
+  port: 6379
+  ttl: 900
+
+log:
+  errorFile: "error.log"
+  combinedFile: "combined.log"
+  level: "debug"
+  inJson: true
+
+http:
+  timeout: 60e3
+  maxRedirects: 2
+
+sentry:
+  dsn: ""
+  sampleRate: 0
+
