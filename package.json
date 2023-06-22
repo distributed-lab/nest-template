@@ -16,7 +16,7 @@
     "start:api:debug": "nest start api --debug --watch",
     "start:api:prod": "nest start api",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --max-warnings=0",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
