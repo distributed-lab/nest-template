@@ -85,7 +85,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const responseBody: ErrorResponseDto = plainToClass(ErrorResponseDto, {
       statusCode: httpStatus,
       error: error,
-      message: errorMessage || exception.message || exception,
+      message: exception?.response?.message || errorMessage || exception.message || exception,
       stack: hideStack ? undefined : exception.stack,
       timestampEntry: timestampEntry,
       timestampExit: timestampExit,

@@ -1,0 +1,72 @@
+default:
+  image:
+    name: "tokend/werf:0.0.15"
+    entrypoint: [""]
+  services:
+    - name: docker:20-dind
+      alias: docker
+      # in our experience although you'd assume this would be sufficient, this did
+      # nothing to prevent connection errors without `DOCKER_TLS_CERTDIR` being set
+      # to an empty string, and I would call that beyond mildly infuriating.
+      command: ["--tls=false"]
+  tags:
+    - "tokend"
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  GITHUB_REF: $CI_COMMIT_SHA
+  DH_IMAGE_NAME: $CI_PROJECT_ROOT_NAMESPACE/$CI_PROJECT_NAME
+  SERVICE: $CI_PROJECT_NAME
+  REGISTRY: registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+  IMAGE_NAME: $REGISTRY:$CI_COMMIT_SHA
+  IMAGE_NAME_TAG: $REGISTRY:$CI_COMMIT_TAG
+  WERF_LOG_COLOR_MODE: "on"
+  WERF_IMAGES_REPO: $CI_REGISTRY_IMAGE
+  WERF_BUILDAH_MODE: auto
+  WERF_ENABLE_PROCESS_EXTERMINATOR: 1
+
+
+.before_script_template: &before_script_templ
+  before_script:
+    - werf version
+    - docker version
+    - echo $CI_REGISTRY
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $WERF_IMAGES_REPO
+
+stages:
+  - build-and-publish
+  - cleanup
+
+Build:
+  stage: build-and-publish
+  <<: *before_script_templ
+  script:
+    - . $(werf ci-env gitlab --as-file)
+    - werf export api --tag $IMAGE_NAME
+  except: [schedules]
+  interruptible: true
+
+Build Tag:
+  stage: build-and-publish
+  only:
+    - tags
+  <<: *before_script_templ
+  script:
+    - . $(werf ci-env gitlab --as-file)
+    - werf export api --tag $IMAGE_NAME_TAG
+  except: [schedules]
+  interruptible: true
+
+Cleanup:
+  stage: cleanup
+  <<: *before_script_templ
+  script:
+    - type werf && source $(werf ci-env gitlab --as-file)
+    - docker login -u nobody -p ${WERF_IMAGES_CLEANUP_PASSWORD} ${WERF_IMAGES_REPO}
+    - werf cleanup
+  only: [schedules]
+  interruptible: true

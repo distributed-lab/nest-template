@@ -9,6 +9,7 @@ import { validationSchema } from './validation-schema.config'
 
 const validationOptions = {
   abortEarly: true,
+  allowUnknown: true,
 }
 
 export const loadConfiguration = (): Config => {
@@ -22,11 +23,11 @@ export const config: ConfigModuleOptions = {
   load: [loadConfiguration],
   validationSchema,
   validationOptions,
-  validate: (record): ReturnType<ConfigModuleOptions['validate']> => {
-    const { error, value: validatedConfig } = validationSchema.validate(record, {
-      allowUnknown: true,
-      ...validationOptions,
-    })
+  validate: (): ReturnType<ConfigModuleOptions['validate']> => {
+    // ConfigModuleOptions.validate record argument returns an invalid config object, so we will load it directly
+    const cfg = loadConfiguration()
+    const { error, value: validatedConfig } = validationSchema.validate(cfg, validationOptions)
+
     if (error) {
       // NOTE: Environment variables validation failed, service will crash
       // We try to log as much information as possible

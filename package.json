@@ -11,6 +11,8 @@
   },
   "scripts": {
     "prebuild:api": "yarn --cwd ./apps/api run prebuild",
+    "build": "rm -rf dist && yarn build:api && yarn build:common",
+    "build:common": "yarn build:common",
     "build:api": "nest build api",
     "start:api:dev": "nest start api --watch",
     "start:api:debug": "nest start api --debug --watch",

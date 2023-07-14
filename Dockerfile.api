@@ -3,15 +3,11 @@ FROM node:18.14.2 as build
 WORKDIR /app
 
 COPY . ./
-RUN yarn && yarn build:api
+RUN npm i -g @vercel/ncc pkg && yarn && yarn build && ncc build ./dist/apps/api/main.js && pkg -t node18-alpine-x64 ./dist/index.js  -o /usr/local/bin/api
 
-FROM node:18.14.2-alpine
+FROM alpine:3.9
 
-WORKDIR /app
-
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
+COPY --from=build /usr/local/bin/api /usr/local/bin/api
 
 EXPOSE 3000
-ENTRYPOINT [ "node", "/app/dist/apps/api/main.js" ]
+ENTRYPOINT ["api"]

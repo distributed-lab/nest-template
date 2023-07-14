@@ -1,0 +1,40 @@
+configVersion: 1
+project: 'nest-template'
+---
+image: builder
+from: node:18.14.2-alpine
+git:
+  - add: /
+    to: /app
+    excludePaths:
+      - .helm
+      - Dockerfile
+    stageDependencies:
+      install:
+        - package.json
+        - yarn.lock
+      setup:
+        - "**/*"
+shell:
+  install:
+    - cd /app
+    - npm i -g @vercel/ncc pkg
+    - yarn install
+  setup:
+    - cd /app
+    - yarn build
+    - ncc build ./dist/apps/api/main.js
+    - pkg -t node18-alpine-x64 ./dist/index.js  -o /usr/local/bin/api
+
+---
+image: api
+from: node:18.14.2-alpine
+docker:
+  ENTRYPOINT: api
+import:
+  - image: builder
+    add: /usr/local/bin/api
+    to: /usr/local/bin/api
+    after: setup
+
+
